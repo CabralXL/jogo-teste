@@ -18,6 +18,32 @@
         box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
         transform: translateY(4px);
       }
+
+      /* Background Effects */
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      }
+      
+      @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+      }
+      
+      .animate-blob {
+        animation: blob 10s infinite;
+      }
+      
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+      
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
     </style>
   <script type="importmap">
 {
@@ -29,7 +55,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-900 text-white overflow-y-auto overflow-x-hidden selection:bg-cyan-500 selection:text-white">
+  <body class="bg-slate-950 text-white overflow-y-auto overflow-x-hidden selection:bg-cyan-500 selection:text-white">
     <div id="root"></div>
   </body>
 </html>

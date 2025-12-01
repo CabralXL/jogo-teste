@@ -223,109 +223,146 @@ const App: React.FC = () => {
   // --- RENDER ---
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center py-8 relative">
+    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center py-8 bg-slate-950 text-slate-100">
       
-      {/* Sound Toggle */}
-      <button 
-        onClick={() => setIsMuted(!isMuted)}
-        className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-2 z-10"
-        title={isMuted ? "Ativar som" : "Desativar som"}
-      >
-        <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-xl`}></i>
-      </button>
-
-      {/* Online Status Banner */}
-      {gameMode === 'Online' && (
-        <div className="absolute top-4 left-4 flex flex-col gap-1">
-          <div className="bg-slate-800 px-3 py-1 rounded-full border border-slate-700 flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isOnlineReady ? 'bg-green-500 animate-pulse' : 'bg-amber-500'}`}></div>
-            <span className="text-xs text-slate-300 font-mono">
-               Sala: {onlineRoomId || '...'}
-            </span>
-          </div>
-          {statusMessage && (
-              <span className="text-xs text-cyan-400 font-bold ml-1 animate-fade-in">{statusMessage}</span>
-          )}
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="mb-6 text-center mt-8 sm:mt-0">
-        <div className="flex items-center justify-center gap-2 mb-2">
-           <svg className="w-8 h-8 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-           <svg className="w-8 h-8 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
-        </div>
-        <h1 className="text-4xl font-bold text-white tracking-wider">JOGO DA VELHA</h1>
-        <p className="text-slate-400 text-sm mt-1 uppercase tracking-widest">Ultimate Edition</p>
+      {/* Animated Background Layers */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-grid opacity-20"></div>
+        
+        {/* Animated Blobs */}
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50"></div>
       </div>
 
-      {/* Score Board */}
-      <ScoreBoard 
-        scores={scores} 
-        currentPlayer={isXNext ? 'X' : 'O'} 
-        gameMode={gameMode} 
-        onlinePlayerSymbol={onlinePlayerSymbol || undefined}
-      />
+      {/* Main Content */}
+      <div className="relative z-10 w-full flex flex-col items-center">
+        
+        {/* Sound Toggle */}
+        <button 
+          onClick={() => setIsMuted(!isMuted)}
+          className="absolute -top-6 right-4 sm:top-0 sm:right-6 text-slate-400 hover:text-white transition-colors p-2 z-20 bg-slate-800/50 rounded-full backdrop-blur-sm"
+          title={isMuted ? "Ativar som" : "Desativar som"}
+        >
+          <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-lg`}></i>
+        </button>
 
-      {/* Game Board */}
-      <div className="relative">
-         <Board 
-            board={board} 
-            onCellClick={handleCellClick} 
-            winningLine={result.line} 
-            isGameActive={!result.winner && !result.isDraw}
-          />
-          
-          {/* Status Indicators */}
-          {isAiThinking && (
-             <div className="absolute -bottom-8 left-0 right-0 text-center text-cyan-400 text-sm font-bold animate-pulse">
-               IA está pensando...
-             </div>
-          )}
-           {gameMode === 'Online' && !isOnlineReady && !result.winner && (
-             <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-col text-center p-4">
-               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-500 mb-4"></div>
-               <p className="text-white font-bold">Aguardando oponente...</p>
-               <p className="text-slate-400 text-xs mt-2">Compartilhe o ID da sala: <span className="text-cyan-400 font-mono text-base">{onlineRoomId}</span></p>
-             </div>
-          )}
-           {gameMode === 'Online' && isOnlineReady && !result.winner && !result.isDraw && onlinePlayerSymbol !== (isXNext ? 'X' : 'O') && (
-              <div className="absolute -bottom-8 left-0 right-0 text-center text-slate-400 text-sm font-bold">
-              Vez do oponente...
+        {/* Online Status Banner */}
+        {gameMode === 'Online' && (
+          <div className="absolute -top-6 left-4 sm:top-0 sm:left-6 flex flex-col gap-1 z-20">
+            <div className="bg-slate-800/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700/50 shadow-lg flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${isOnlineReady ? 'bg-green-500 animate-pulse' : 'bg-amber-500'}`}></div>
+              <span className="text-xs text-slate-300 font-mono">
+                Sala: <span className="text-white font-bold">{onlineRoomId || '...'}</span>
+              </span>
             </div>
-           )}
-      </div>
+            {statusMessage && (
+                <span className="text-[10px] uppercase tracking-wider text-cyan-400 font-bold ml-1 animate-fade-in bg-slate-900/50 px-2 rounded">{statusMessage}</span>
+            )}
+          </div>
+        )}
 
-      {/* Controls */}
-      <Controls 
-        gameMode={gameMode}
-        difficulty={difficulty}
-        onModeChange={handleModeChange}
-        onDifficultyChange={(d) => { setDifficulty(d); resetGame(); }}
-        onReset={() => resetGame(false)}
-      />
+        {/* Header */}
+        <div className="mb-8 text-center mt-8 sm:mt-0 relative">
+          <div className="absolute inset-0 bg-cyan-500/20 blur-3xl -z-10 rounded-full"></div>
+          <div className="flex items-center justify-center gap-3 mb-2">
+             <div className="relative">
+               <svg className="w-10 h-10 text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+             </div>
+             <div className="relative">
+               <svg className="w-10 h-10 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+             </div>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider filter drop-shadow-lg">
+            TIC-TAC-TOE
+          </h1>
+          <p className="text-cyan-500 text-xs sm:text-sm mt-1 uppercase tracking-[0.3em] font-bold">Ultimate Edition</p>
+        </div>
 
-      {/* Footer */}
-      <footer className="mt-8 text-slate-500 text-xs">
-        <p>Desenvolvido com React & Tailwind</p>
-      </footer>
-
-      {/* Winner Modal */}
-      <Modal 
-        winner={result.winner} 
-        isDraw={result.isDraw} 
-        onRestart={() => resetGame(false)} 
-      />
-
-      {/* Online Lobby Modal */}
-      {isOnlineLobbyOpen && (
-        <OnlineLobby 
-          onCreateRoom={createRoom}
-          onJoinRoom={joinRoom}
-          onCancel={() => handleModeChange('PvAI')} // Go back to default if cancelled
+        {/* Score Board */}
+        <ScoreBoard 
+          scores={scores} 
+          currentPlayer={isXNext ? 'X' : 'O'} 
+          gameMode={gameMode} 
+          onlinePlayerSymbol={onlinePlayerSymbol || undefined}
         />
-      )}
 
+        {/* Game Board */}
+        <div className="relative group">
+          {/* Glow effect behind board - Added pointer-events-none */}
+          <div className="absolute -inset-1 pointer-events-none bg-gradient-to-r from-cyan-500 via-purple-500 to-amber-500 rounded-3xl opacity-20 group-hover:opacity-40 blur transition duration-1000"></div>
+          
+           <Board 
+              board={board} 
+              onCellClick={handleCellClick} 
+              winningLine={result.line} 
+              isGameActive={!result.winner && !result.isDraw}
+            />
+            
+            {/* Status Indicators */}
+            {isAiThinking && (
+               <div className="absolute -bottom-10 left-0 right-0 text-center">
+                 <span className="inline-flex items-center gap-2 px-4 py-1 bg-slate-800/80 rounded-full text-cyan-400 text-sm font-bold border border-cyan-500/30 animate-pulse">
+                   <i className="fas fa-microchip"></i> IA Calculando...
+                 </span>
+               </div>
+            )}
+             {gameMode === 'Online' && !isOnlineReady && !result.winner && (
+               <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-col text-center p-6 z-20 border border-slate-700">
+                 <div className="relative">
+                   <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-20 rounded-full"></div>
+                   <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-cyan-500 mb-4 relative z-10"></div>
+                 </div>
+                 <p className="text-white font-bold text-lg">Aguardando...</p>
+                 <div className="mt-3 bg-slate-800 p-2 rounded-lg border border-slate-700 w-full">
+                   <p className="text-slate-400 text-xs uppercase mb-1">ID da Sala</p>
+                   <p className="text-cyan-400 font-mono text-xl tracking-widest">{onlineRoomId}</p>
+                 </div>
+               </div>
+            )}
+             {gameMode === 'Online' && isOnlineReady && !result.winner && !result.isDraw && onlinePlayerSymbol !== (isXNext ? 'X' : 'O') && (
+                <div className="absolute -bottom-10 left-0 right-0 text-center">
+                   <span className="inline-flex items-center gap-2 px-4 py-1 bg-slate-800/80 rounded-full text-slate-300 text-sm font-bold border border-slate-600">
+                     <i className="fas fa-hourglass-half"></i> Vez do oponente
+                   </span>
+              </div>
+             )}
+        </div>
+
+        {/* Controls */}
+        <Controls 
+          gameMode={gameMode}
+          difficulty={difficulty}
+          onModeChange={handleModeChange}
+          onDifficultyChange={(d) => { setDifficulty(d); resetGame(); }}
+          onReset={() => resetGame(false)}
+        />
+
+        {/* Footer */}
+        <footer className="mt-12 text-slate-600 text-xs font-medium tracking-wide">
+          <p>React • Tailwind • Web Audio API</p>
+        </footer>
+
+        {/* Winner Modal */}
+        <Modal 
+          winner={result.winner} 
+          isDraw={result.isDraw} 
+          onRestart={() => resetGame(false)} 
+        />
+
+        {/* Online Lobby Modal */}
+        {isOnlineLobbyOpen && (
+          <OnlineLobby 
+            onCreateRoom={createRoom}
+            onJoinRoom={joinRoom}
+            onCancel={() => handleModeChange('PvAI')} // Go back to default if cancelled
+          />
+        )}
+      
+      </div>
     </div>
   );
 };

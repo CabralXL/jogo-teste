@@ -11,7 +11,7 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({ board, onCellClick, winningLine, isGameActive }) => {
   return (
-    <div className="grid grid-cols-3 gap-3 sm:gap-4 p-4 bg-slate-900 rounded-2xl mx-auto max-w-fit">
+    <div className="relative z-10 grid grid-cols-3 gap-3 sm:gap-4 p-4 bg-slate-900 rounded-2xl mx-auto max-w-fit">
       {board.map((value, index) => (
         <Cell
           key={index}

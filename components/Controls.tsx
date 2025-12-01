@@ -17,15 +17,17 @@ const Controls: React.FC<ControlsProps> = ({
   onReset,
 }) => {
   const getButtonClass = (isActive: boolean) => 
-    `flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1 sm:gap-2 ${
-      isActive ? 'bg-slate-600 text-white shadow' : 'text-slate-400 hover:text-white'
+    `flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 transform hover:scale-105 active:scale-95 ${
+      isActive 
+        ? 'bg-slate-600 text-white shadow-lg ring-1 ring-slate-500/50' 
+        : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
     }`;
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-md px-4 mt-6">
       
       {/* Mode Selector */}
-      <div className="flex bg-slate-800 p-1 rounded-xl gap-1">
+      <div className="flex bg-slate-800 p-1 rounded-xl gap-1 shadow-inner border border-slate-700/50">
         <button
           className={getButtonClass(gameMode === 'PvP')}
           onClick={() => onModeChange('PvP')}
@@ -48,17 +50,17 @@ const Controls: React.FC<ControlsProps> = ({
 
       {/* Difficulty Selector (Only visible in PvAI) */}
       {gameMode === 'PvAI' && (
-        <div className="flex justify-between items-center bg-slate-800 p-2 rounded-xl animate-fade-in">
+        <div className="flex justify-between items-center bg-slate-800 p-2 rounded-xl animate-fade-in border border-slate-700/50">
           <span className="text-xs uppercase font-bold text-slate-400 ml-2">Nível:</span>
           <div className="flex gap-1">
             {(['Fácil', 'Médio', 'Impossível'] as Difficulty[]).map((level) => (
               <button
                 key={level}
                 onClick={() => onDifficultyChange(level)}
-                className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
+                className={`px-3 py-1 text-xs font-bold rounded-md transition-all duration-200 transform hover:scale-110 active:scale-95 ${
                   difficulty === level
-                    ? 'bg-cyan-500 text-slate-900'
-                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    ? 'bg-cyan-500 text-slate-900 shadow-lg shadow-cyan-500/20'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white'
                 }`}
               >
                 {level}
@@ -71,7 +73,7 @@ const Controls: React.FC<ControlsProps> = ({
       {/* Reset Button */}
       <button
         onClick={onReset}
-        className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all shadow-[0_4px_0_rgb(51,65,85)] active:shadow-none active:translate-y-1 flex items-center justify-center gap-2"
+        className="w-full py-3 bg-slate-700 hover:bg-slate-600 hover:scale-[1.02] active:scale-95 text-white font-bold rounded-xl transition-all duration-200 shadow-[0_4px_0_rgb(51,65,85)] active:shadow-none active:translate-y-1 flex items-center justify-center gap-2 border border-slate-600"
       >
         <i className="fas fa-redo-alt"></i> 
         {gameMode === 'Online' ? 'Reiniciar Partida' : 'Reiniciar Tabuleiro'}
